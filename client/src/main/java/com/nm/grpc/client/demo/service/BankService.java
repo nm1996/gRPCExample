@@ -1,19 +1,28 @@
 package com.nm.grpc.client.demo.service;
 
+
+import com.nm.grpc.common.dto.Transaction;
+import com.nm.grpc.common.mapper.TransactionMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.CountDownLatch;
+import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class BankService {
 
+    private final static Integer DAY_PERIOD = 7;
 
-    public void getTransactions() throws InterruptedException {
+    private final TransactionServiceClient transactionServiceClient;
+    private final TransactionMapper transactionMapper;
 
-        TransactionServiceClient client = new TransactionServiceClient("localhost", 8090);
-        client.streamTransactions("123456789", 30);
-        new CountDownLatch(1).await();
-        client.shutdown();
 
+    public List<Transaction> getTransactions(String accountNumber){
+        return transactionServiceClient.getTransactionsByAccountAndDuration(accountNumber, DAY_PERIOD).getTransactionDetailsList().stream()
+                .map(transactionMapper::toDto)
+                .toList();
     }
+
+
 }

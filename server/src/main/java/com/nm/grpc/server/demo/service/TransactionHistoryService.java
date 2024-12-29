@@ -6,75 +6,42 @@ import com.javainuse.banking.TransactionDetailList;
 import com.javainuse.banking.TransactionServiceGrpc.TransactionServiceImplBase;
 import com.nm.grpc.common.dto.Transaction;
 import com.nm.grpc.common.mapper.TransactionMapper;
+import com.nm.grpc.server.demo.repository.TransactionRepository;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import static com.nm.grpc.common.dto.TransactionType.*;
 
 @Slf4j
 @RequiredArgsConstructor
 @GrpcService
 public class TransactionHistoryService extends TransactionServiceImplBase {
 
-    private final TransactionMapper mapper;
-
+    private final TransactionRepository transactionRepository;
+    private final TransactionMapper transactionMapper;
 
     @Override
-    public void streamTransactions(AccountRequest request, StreamObserver<TransactionDetailList> responseObserver) {
-        List<Transaction> transactions = fetchTransactions();
-        int batchSize = 3;
+    public void getTransactions(AccountRequest request, StreamObserver<TransactionDetailList> responseObserver) {
+        List<Transaction> transactions = transactionRepository.fetchTransactions(request.getAccountNumber(), request.getDurationInDays());
 
-        for (int i = 0; i < transactions.size(); i += batchSize) {
-            int endIndex = Math.min(i + batchSize, transactions.size());
-            List<Transaction> batchTransactions = transactions.subList(i, endIndex);
+        try {
+            List<TransactionDetail> transactionDetails = transactions.stream()
+                    .map(transactionMapper::toProto)
+                    .toList();
 
-            TransactionDetailList.Builder transactionDetailListBuilder = TransactionDetailList.newBuilder();
+            TransactionDetailList result = TransactionDetailList.newBuilder()
+                    .addAllTransactionDetails(transactionDetails)
+                    .build();
 
-            for (Transaction transaction : batchTransactions) {
-                TransactionDetail transactionDetail = mapper.toProto(transaction);
-                transactionDetailListBuilder.addTransactionDetails(transactionDetail);
-            }
-            TransactionDetailList transactionDetailList = transactionDetailListBuilder.build();
-
-            responseObserver.onNext(transactionDetailList);
-
-
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                log.error("Error happen on publishing [message = {}]", e.getMessage());
-                responseObserver.onError(e);
-                return;
-            }
+            responseObserver.onNext(result);
+        } catch (Exception e) {
+            log.info("Error while fetching transactions [message= {}, accountNumber= {}]", e.getMessage(), request.getAccountNumber());
+            responseObserver.onError(e);
         }
 
         responseObserver.onCompleted();
     }
 
-
-    private List<Transaction> fetchTransactions() {
-        Transaction transaction1 = new Transaction("1", DEPOSIT.getName(), BigDecimal.valueOf(100.0));
-        Transaction transaction2 = new Transaction("2", WITHDRAWAL.getName(), BigDecimal.valueOf(65));
-        Transaction transaction3 = new Transaction("3", TRANSFER.getName(), BigDecimal.valueOf(200));
-        Transaction transaction4 = new Transaction("4", DEPOSIT.getName(), BigDecimal.valueOf(70));
-        Transaction transaction5 = new Transaction("5", WITHDRAWAL.getName(), BigDecimal.valueOf(30));
-        Transaction transaction6 = new Transaction("6", BONUS.getName(), BigDecimal.valueOf(46));
-
-        return new ArrayList<>(
-                Arrays.asList(
-                        transaction1,
-                        transaction2,
-                        transaction3,
-                        transaction4,
-                        transaction5,
-                        transaction6
-                ));
-    }
 }

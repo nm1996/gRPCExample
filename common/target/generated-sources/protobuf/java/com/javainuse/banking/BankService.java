@@ -52,10 +52,10 @@ public final class BankService {
       "n_amount\030\003 \001(\0132\030.banking.BigDecimalProto" +
       "\"P\n\025TransactionDetailList\0227\n\023transaction" +
       "_details\030\001 \003(\0132\032.banking.TransactionDeta" +
-      "il2e\n\022TransactionService\022O\n\022streamTransa" +
-      "ctions\022\027.banking.AccountRequest\032\036.bankin" +
-      "g.TransactionDetailList0\001B\031\n\025com.javainu" +
-      "se.bankingP\001b\006proto3"
+      "il2`\n\022TransactionService\022J\n\017GetTransacti" +
+      "ons\022\027.banking.AccountRequest\032\036.banking.T" +
+      "ransactionDetailListB\031\n\025com.javainuse.ba" +
+      "nkingP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

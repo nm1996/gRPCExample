@@ -16,34 +16,34 @@ public final class TransactionServiceGrpc {
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<com.javainuse.banking.AccountRequest,
-      com.javainuse.banking.TransactionDetailList> getStreamTransactionsMethod;
+      com.javainuse.banking.TransactionDetailList> getGetTransactionsMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "streamTransactions",
+      fullMethodName = SERVICE_NAME + '/' + "GetTransactions",
       requestType = com.javainuse.banking.AccountRequest.class,
       responseType = com.javainuse.banking.TransactionDetailList.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<com.javainuse.banking.AccountRequest,
-      com.javainuse.banking.TransactionDetailList> getStreamTransactionsMethod() {
-    io.grpc.MethodDescriptor<com.javainuse.banking.AccountRequest, com.javainuse.banking.TransactionDetailList> getStreamTransactionsMethod;
-    if ((getStreamTransactionsMethod = TransactionServiceGrpc.getStreamTransactionsMethod) == null) {
+      com.javainuse.banking.TransactionDetailList> getGetTransactionsMethod() {
+    io.grpc.MethodDescriptor<com.javainuse.banking.AccountRequest, com.javainuse.banking.TransactionDetailList> getGetTransactionsMethod;
+    if ((getGetTransactionsMethod = TransactionServiceGrpc.getGetTransactionsMethod) == null) {
       synchronized (TransactionServiceGrpc.class) {
-        if ((getStreamTransactionsMethod = TransactionServiceGrpc.getStreamTransactionsMethod) == null) {
-          TransactionServiceGrpc.getStreamTransactionsMethod = getStreamTransactionsMethod =
+        if ((getGetTransactionsMethod = TransactionServiceGrpc.getGetTransactionsMethod) == null) {
+          TransactionServiceGrpc.getGetTransactionsMethod = getGetTransactionsMethod =
               io.grpc.MethodDescriptor.<com.javainuse.banking.AccountRequest, com.javainuse.banking.TransactionDetailList>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "streamTransactions"))
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "GetTransactions"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.javainuse.banking.AccountRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.javainuse.banking.TransactionDetailList.getDefaultInstance()))
-              .setSchemaDescriptor(new TransactionServiceMethodDescriptorSupplier("streamTransactions"))
+              .setSchemaDescriptor(new TransactionServiceMethodDescriptorSupplier("GetTransactions"))
               .build();
         }
       }
     }
-    return getStreamTransactionsMethod;
+    return getGetTransactionsMethod;
   }
 
   /**
@@ -96,9 +96,9 @@ public final class TransactionServiceGrpc {
 
     /**
      */
-    default void streamTransactions(com.javainuse.banking.AccountRequest request,
+    default void getTransactions(com.javainuse.banking.AccountRequest request,
         io.grpc.stub.StreamObserver<com.javainuse.banking.TransactionDetailList> responseObserver) {
-      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getStreamTransactionsMethod(), responseObserver);
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetTransactionsMethod(), responseObserver);
     }
   }
 
@@ -131,10 +131,10 @@ public final class TransactionServiceGrpc {
 
     /**
      */
-    public void streamTransactions(com.javainuse.banking.AccountRequest request,
+    public void getTransactions(com.javainuse.banking.AccountRequest request,
         io.grpc.stub.StreamObserver<com.javainuse.banking.TransactionDetailList> responseObserver) {
-      io.grpc.stub.ClientCalls.asyncServerStreamingCall(
-          getChannel().newCall(getStreamTransactionsMethod(), getCallOptions()), request, responseObserver);
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getGetTransactionsMethod(), getCallOptions()), request, responseObserver);
     }
   }
 
@@ -156,10 +156,9 @@ public final class TransactionServiceGrpc {
 
     /**
      */
-    public java.util.Iterator<com.javainuse.banking.TransactionDetailList> streamTransactions(
-        com.javainuse.banking.AccountRequest request) {
-      return io.grpc.stub.ClientCalls.blockingServerStreamingCall(
-          getChannel(), getStreamTransactionsMethod(), getCallOptions(), request);
+    public com.javainuse.banking.TransactionDetailList getTransactions(com.javainuse.banking.AccountRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getGetTransactionsMethod(), getCallOptions(), request);
     }
   }
 
@@ -178,9 +177,17 @@ public final class TransactionServiceGrpc {
         io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       return new TransactionServiceFutureStub(channel, callOptions);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.javainuse.banking.TransactionDetailList> getTransactions(
+        com.javainuse.banking.AccountRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getGetTransactionsMethod(), getCallOptions()), request);
+    }
   }
 
-  private static final int METHODID_STREAM_TRANSACTIONS = 0;
+  private static final int METHODID_GET_TRANSACTIONS = 0;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -199,8 +206,8 @@ public final class TransactionServiceGrpc {
     @java.lang.SuppressWarnings("unchecked")
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
-        case METHODID_STREAM_TRANSACTIONS:
-          serviceImpl.streamTransactions((com.javainuse.banking.AccountRequest) request,
+        case METHODID_GET_TRANSACTIONS:
+          serviceImpl.getTransactions((com.javainuse.banking.AccountRequest) request,
               (io.grpc.stub.StreamObserver<com.javainuse.banking.TransactionDetailList>) responseObserver);
           break;
         default:
@@ -222,12 +229,12 @@ public final class TransactionServiceGrpc {
   public static final io.grpc.ServerServiceDefinition bindService(AsyncService service) {
     return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
         .addMethod(
-          getStreamTransactionsMethod(),
-          io.grpc.stub.ServerCalls.asyncServerStreamingCall(
+          getGetTransactionsMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
             new MethodHandlers<
               com.javainuse.banking.AccountRequest,
               com.javainuse.banking.TransactionDetailList>(
-                service, METHODID_STREAM_TRANSACTIONS)))
+                service, METHODID_GET_TRANSACTIONS)))
         .build();
   }
 
@@ -276,7 +283,7 @@ public final class TransactionServiceGrpc {
         if (result == null) {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new TransactionServiceFileDescriptorSupplier())
-              .addMethod(getStreamTransactionsMethod())
+              .addMethod(getGetTransactionsMethod())
               .build();
         }
       }

@@ -29,5 +29,5 @@ message TransactionDetailList {
 
 
 service TransactionService {
-  rpc streamTransactions(AccountRequest) returns (stream TransactionDetailList);
+  rpc GetTransactions (AccountRequest) returns (TransactionDetailList);
 }
