@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package banking;
+
+message UserCreationRequest{
+  string name = 1;
+  string lastname = 2;
+  int32 age = 3;
+}
+
+message UserCreationResponse{
+  bool isCreated = 1;
+}
+
+
+service UserCreationService{
+  rpc UserCreate (UserCreationRequest) returns (UserCreationResponse);
+}

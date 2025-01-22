@@ -1,20 +1,20 @@
 package com.nm.grpc.client.demo.service;
 
-import com.javainuse.banking.AccountRequest;
-import com.javainuse.banking.TransactionDetailList;
-import com.javainuse.banking.TransactionServiceGrpc;
 import com.nm.grpc.client.demo.exception.GrpcCallException;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import lombok.extern.slf4j.Slf4j;
 
+import static banking.UserCreation.*;
+import static banking.UserCreationServiceGrpc.*;
+
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-public class TransactionServiceClient implements AutoCloseable {
+public class UserCreationServiceClient implements AutoCloseable {
 
     private final ManagedChannel channel;
-    private final TransactionServiceGrpc.TransactionServiceBlockingStub blockingStub;
+    private final UserCreationServiceBlockingStub blockingStub;
 
 
     private ManagedChannel createChannel(String host, int port) {
@@ -23,10 +23,9 @@ public class TransactionServiceClient implements AutoCloseable {
                 .build();
     }
 
-    public TransactionServiceClient(String host, int port) {
+    public UserCreationServiceClient(String host, int port) {
         channel = createChannel(host, port);
-        blockingStub = TransactionServiceGrpc.newBlockingStub(channel);
-
+        blockingStub = newBlockingStub(channel);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
@@ -37,16 +36,12 @@ public class TransactionServiceClient implements AutoCloseable {
         }));
     }
 
-    public TransactionDetailList getTransactionsByAccountAndDuration(String accountNumber, int durationInDays) throws GrpcCallException {
-        AccountRequest request = AccountRequest.newBuilder()
-                .setAccountNumber(accountNumber)
-                .setDurationInDays(durationInDays)
-                .build();
 
-        try {
-            return blockingStub.getTransactions(request);
+    public UserCreationResponse createUser(UserCreationRequest request) {
+        try{
+            return blockingStub.userCreate(request);
         } catch (Exception e) {
-            log.error("Error while fetching transactions [message={}]", e.getMessage());
+            log.error("Error while creating user [message={}]", e.getMessage());
             throw new GrpcCallException(e.getMessage());
         }
     }
